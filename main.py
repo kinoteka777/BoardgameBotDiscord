@@ -29,23 +29,13 @@ async def restart(ctx):
     await ctx.respond("Restarting...")
     os.execv(sys.executable, ['python']+sys.argv)
 
+# BOARD GAME COMMAND + HELPERS
 @games.command()
 async def add_game(ctx, date, time, location, game):
-    embed = discord.Embed(
-        title="Board Game Night 🎲",
-        description="Join us for a fun-filled night of board games!",
-        color=discord.Color.blue()  # You can change this to any color you'd like
-    )
+    view = views.BoardgameEventView(date, time, location, game)
+    embed = views.create_boardgame_embed(date, time, location, game, [])
+    await ctx.respond(embed=embed, view=view)
 
-    # Adding fields to the embed
-    embed.add_field(name="📅 Date", value=date, inline=False)
-    embed.add_field(name="⏰ Time", value=time, inline=False)
-    embed.add_field(name="📍 Location", value=location, inline=False)
-    embed.add_field(name="🎮 Game:", value=game, inline=False)
-    embed.set_footer(text="See you there! 🎉")
-
-    # Send the embed to the same channel where the command was used
-    await ctx.respond(embed=embed)
 
 # MAIN ENTRY POINT
 def main() -> None:
